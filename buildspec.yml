@@ -14,4 +14,16 @@ phases:
   post_build:
     commands:
       - echo "Syncing build to S3..."
+      # Remove old files (optional) and sync new build
+      - aws s3 sync build/ s3://$S3_BUCKET/ --delete
+      - echo "Setting s3 object ACLs (if needed)..."
+      # For private bucket + CloudFront OAC you don't want public ACLs; skip ACL change.
       - echo "Invalidating CloudFront cache..."
+      - >
+        aws cloudfront create-invalidation
+          --distribution-id $CLOUDFRONT_DIST_ID
+          --paths "/*"
+artifacts:
+  files:
+    - "**/*"
+  base-directory: dist
