@@ -19,10 +19,7 @@ phases:
       # For private bucket + CloudFront OAC you don't want public ACLs; skip ACL change.
       - echo "Invalidating CloudFront cache..."
       - echo "CLOUDFRONT_DIST_ID=$CLOUDFRONT_DIST_ID"
-      - >
-        aws cloudfront create-invalidation
-          --distribution-id $CLOUDFRONT_DIST_ID
-          --paths "/*"
+      - aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DIST_ID --paths "/*"
 artifacts:
   files:
     - "**/*"
